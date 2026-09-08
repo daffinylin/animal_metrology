@@ -1,0 +1,21 @@
+opencv-python>=4.8.0
+numpy>=1.24.0
+torch>=2.0.0
+# Ultralytics Framework (YOLOv8 Segmentation & Pose)
+ultralytics>=8.0.0
+
+# ==============================================================================
+# External Weights Download Notice:
+# AP-10K Keypoint Weights (ap10k_pt.pth) must be manually downloaded from:
+# https://github.com/open-mmlab/mmpose/blob/main/configs/animal_2d_keypoint/rtmpose/ap10k/rtmpose_ap10k.md
+# ==============================================================================
+
+### 系統架構圖
+
+1. **Input Layer**：讀取原始圖檔並進行圖像處理。
+2. **Segmentation Layer**：使用 `yolov8x-seg` 定位動物，過濾非動物目標，並繪製綠色外框。
+3. **Pose Layer**：
+   * **Method A**：無旋轉 Inference。
+   * **Method B (Fallback TTA)**：若雙眼捕捉失敗，自動啟用大邊界 Padding、1024 高解析度與 4 角度旋轉，由 `ap10k_pt.pth` 模型抓取眼睛keypoints。
+4. **座標轉換與距離計算層 (Metric Layer)**：將旋轉座標還原至原圖系統，計算單隻動物眼距與跨個體右眼距離。
+5. **視覺化輸出層 (Output Layer)**：將計算結果繪製成顏色區隔的線條與文字標籤，最後儲存影像。
